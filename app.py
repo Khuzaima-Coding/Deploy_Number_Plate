@@ -3,7 +3,7 @@ import streamlit as st
 from PIL import Image
 
 # YOLO model load
-model = YOLO("best (1).pt")
+model = YOLO("best.pt")
 
 st.title("YOLO Object Detection")
 
