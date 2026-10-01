@@ -1,16 +1,30 @@
 from ultralytics import YOLO
-import gradio as gr 
+import streamlit as st
+from PIL import Image
 
+# YOLO model load
+model = YOLO("best (1).pt")
 
-model = YOLO("best.pt")
+st.title("YOLO Object Detection")
 
-def pred_image(image):
-    img = model.predict(image)
-    return img[0].plot()
+# Image upload
+uploaded_file = st.file_uploader(
+    "Upload an Image",
+    type=["jpg", "jpeg", "png"]
+)
 
+if uploaded_file is not None:
+    # Convert Streamlit UploadedFile buffer to a PIL Image
+    image = Image.open(uploaded_file)
 
-app= gr.Interface(fn = pred_image, inputs = 'image', outputs = "image" )
-app.launch()
+    # YOLO prediction
+    results = model.predict(image)
+
+    # Detection result plot (returns BGR numpy array)
+    result_image = results[0].plot()
+
+    # Show result (convert BGR to RGB so colors render correctly in Streamlit)
+    st.image(result_image, channels="BGR", caption="Detection Result")
 
 #break the terminal -- ctrl+c
 #download libraries -- pip install -r libraries
